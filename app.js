@@ -12,6 +12,8 @@ var instruments_products = require('./data/instruments');
 var groceries_products = require('./data/groceries');
 var all_items = electronics_products.concat(instruments_products, groceries_products);
 
+const port = process.env.PORT || 8080;
+
 var app = express();
 const router = express.Router();
 
@@ -331,7 +333,7 @@ router.get('/todays_deals', (request, response) => {
 
 app.use('/', router);
 
-var server = app.listen(8080, () => {
+var server = app.listen(port, () => {
     console.log('Server is up and running');
     utils.init();
     setTimeout(function(){ getLocalDeal() }, 3000);
@@ -444,6 +446,10 @@ app.post('/login', (request, response) => {
                         loginlogoutButton: '<li class="nav-item" id="cart"><a href="/logout" class="nav-link">Logout</a></li>'
                     });
                 } else {
+                    continue;
+                }
+            } else {
+                if ((i + 1) === result.length) {
                     var cart = [{
                         title: "No Items",
                         price: 0,
@@ -467,26 +473,9 @@ app.post('/login', (request, response) => {
                             '    });\n' +
                             '</script>'
                     });
+                } else {
+                    continue;
                 }
-            } else {
-                response.render('landing.hbs', {
-                    cart: cart,
-                    sub_total: Math.round(arr.arrSum(sub_total) * 100) / 100,
-                    popup: '<script>\n' +
-                        '    $(document).ready(function () {\n' +
-                        '        var mymodal = document.querySelector(\'.popup6\');\n' +
-                        '        mymodal.style.visibility = \'visible\';\n' +
-                        '        mymodal.style.opacity = \'1\';\n' +
-                        '    })\n' +
-                        '</script>',
-                    loginlogoutButton: '<li class="nav-item" id="loginbutton"><a href="#" class="nav-link" data-toggle="modal" data-target="#login">Login</a></li>',
-                    imgTag: '<img id="captchapng" src="/vcode" alt="Smiley face" height="30" width="80">',
-                    modal: '<script type="text/javascript">\n' +
-                        '    $(window).on(\'load\',function(){\n' +
-                        '        $(\'#login\').modal(\'show\');\n' +
-                        '    });\n' +
-                        '</script>'
-                });
             }
         }
     });

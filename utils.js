@@ -7,9 +7,9 @@ module.exports.getDb = () => {
 };
 
 module.exports.init = function(callback) {
-    MongoClient.connect('mongodb://localhost:27017', (err, client) => {
+    MongoClient.connect("mongodb+srv://taylor:test123@acit2911-an76n.mongodb.net/test?retryWrites=true", (err, client) => {
         if (err) {
-            return console.log('Unable to connect to DB')
+            return console.log(err)
         }
         _db = client.db('users');
         console.log('Successfully connected to MongoDB server');
